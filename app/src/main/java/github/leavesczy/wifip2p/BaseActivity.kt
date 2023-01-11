@@ -28,6 +28,7 @@ open class BaseActivity : AppCompatActivity() {
         loadingDialog?.dismiss()
     }
 
+    //定义父类方法，全局可用
     protected fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }

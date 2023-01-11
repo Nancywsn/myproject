@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 def keyAliasExt = "leavesCZY"
 def keyPasswordExt = "123456"

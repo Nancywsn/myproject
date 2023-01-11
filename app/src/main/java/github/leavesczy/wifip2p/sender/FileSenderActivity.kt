@@ -8,21 +8,14 @@ import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import github.leavesczy.wifip2p.BaseActivity
-import github.leavesczy.wifip2p.DeviceAdapter
-import github.leavesczy.wifip2p.DirectActionListener
-import github.leavesczy.wifip2p.DirectBroadcastReceiver
-import github.leavesczy.wifip2p.OnItemClickListener
-import github.leavesczy.wifip2p.R
+import github.leavesczy.wifip2p.*
 import github.leavesczy.wifip2p.models.ViewState
 import github.leavesczy.wifip2p.utils.WifiP2pUtils
+import kotlinx.android.synthetic.main.activity_file_sender.*
 import kotlinx.coroutines.launch
 
 /**
@@ -32,33 +25,33 @@ import kotlinx.coroutines.launch
 @SuppressLint("NotifyDataSetChanged")
 class FileSenderActivity : BaseActivity() {
 
-    private val tvDeviceState by lazy {
-        findViewById<TextView>(R.id.tvDeviceState)
-    }
-
-    private val tvConnectionStatus by lazy {
-        findViewById<TextView>(R.id.tvConnectionStatus)
-    }
-
-    private val btnDisconnect by lazy {
-        findViewById<Button>(R.id.btnDisconnect)
-    }
-
-    private val btnChooseFile by lazy {
-        findViewById<Button>(R.id.btnChooseFile)
-    }
-
-    private val rvDeviceList by lazy {
-        findViewById<RecyclerView>(R.id.rvDeviceList)
-    }
-
-    private val tvLog by lazy {
-        findViewById<TextView>(R.id.tvLog)
-    }
-
-    private val btnDirectDiscover by lazy {
-        findViewById<Button>(R.id.btnDirectDiscover)
-    }
+//    private val tvDeviceState by lazy {
+//        findViewById<TextView>(R.id.tvDeviceState)
+//    }
+//
+//    private val tvConnectionStatus by lazy {
+//        findViewById<TextView>(R.id.tvConnectionStatus)
+//    }
+//
+//    private val btnDisconnect by lazy {
+//        findViewById<Button>(R.id.btnDisconnect)
+//    }
+//
+//    private val btnChooseFile by lazy {
+//        findViewById<Button>(R.id.btnChooseFile)
+//    }
+//
+//    private val rvDeviceList by lazy {
+//        findViewById<RecyclerView>(R.id.rvDeviceList)
+//    }
+//
+//    private val tvLog by lazy {
+//        findViewById<TextView>(R.id.tvLog)
+//    }
+//
+//    private val btnDirectDiscover by lazy {
+//        findViewById<Button>(R.id.btnDirectDiscover)
+//    }
 
     private val fileSenderViewModel by viewModels<FileSenderViewModel>()
 

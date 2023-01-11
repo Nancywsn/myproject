@@ -6,9 +6,6 @@ import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import coil.load
@@ -17,6 +14,7 @@ import github.leavesczy.wifip2p.DirectActionListener
 import github.leavesczy.wifip2p.DirectBroadcastReceiver
 import github.leavesczy.wifip2p.R
 import github.leavesczy.wifip2p.models.ViewState
+import kotlinx.android.synthetic.main.activity_file_receiver.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -27,25 +25,25 @@ import kotlin.coroutines.resume
  */
 class FileReceiverActivity : BaseActivity() {
 
-    private val ivImage by lazy {
-        findViewById<ImageView>(R.id.ivImage)
-    }
-
-    private val tvLog by lazy {
-        findViewById<TextView>(R.id.tvLog)
-    }
-
-    private val btnCreateGroup by lazy {
-        findViewById<Button>(R.id.btnCreateGroup)
-    }
-
-    private val btnRemoveGroup by lazy {
-        findViewById<Button>(R.id.btnRemoveGroup)
-    }
-
-    private val btnStartReceive by lazy {
-        findViewById<Button>(R.id.btnStartReceive)
-    }
+//    private val ivImage by lazy {
+//        findViewById<ImageView>(R.id.ivImage)
+//    }
+//
+//    private val tvLog by lazy {
+//        findViewById<TextView>(R.id.tvLog)
+//    }
+//
+//    private val btnCreateGroup by lazy {
+//        findViewById<Button>(R.id.btnCreateGroup)
+//    }
+//
+//    private val btnRemoveGroup by lazy {
+//        findViewById<Button>(R.id.btnRemoveGroup)
+//    }
+//
+//    private val btnStartReceive by lazy {
+//        findViewById<Button>(R.id.btnStartReceive)
+//    }
 
     private val fileReceiverViewModel by viewModels<FileReceiverViewModel>()
 
