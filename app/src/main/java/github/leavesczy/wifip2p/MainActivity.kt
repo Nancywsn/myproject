@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import github.leavesczy.wifip2p.receiver.FileReceiverActivity
 import github.leavesczy.wifip2p.sender.FileSenderActivity
+import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * @Author: CZY
@@ -50,17 +51,17 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<View>(R.id.btnCheckPermission).setOnClickListener {
+        btnCheckPermission.setOnClickListener {
             requestPermissionLaunch.launch(requestedPermissions)
         }
-        findViewById<View>(R.id.btnSender).setOnClickListener {
+        btnSender.setOnClickListener {
             if (allPermissionGranted()) {
                 startActivity(FileSenderActivity::class.java)
             } else {
                 onPermissionDenied()
             }
         }
-        findViewById<View>(R.id.btnReceiver).setOnClickListener {
+        btnReceiver.setOnClickListener {
             if (allPermissionGranted()) {
                 startActivity(FileReceiverActivity::class.java)
             } else {

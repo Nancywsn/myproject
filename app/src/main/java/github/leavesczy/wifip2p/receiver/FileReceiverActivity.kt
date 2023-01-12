@@ -25,25 +25,83 @@ import kotlin.coroutines.resume
  */
 class FileReceiverActivity : BaseActivity() {
 
-//    private val ivImage by lazy {
-//        findViewById<ImageView>(R.id.ivImage)
-//    }
-//
-//    private val tvLog by lazy {
-//        findViewById<TextView>(R.id.tvLog)
-//    }
-//
-//    private val btnCreateGroup by lazy {
-//        findViewById<Button>(R.id.btnCreateGroup)
-//    }
-//
-//    private val btnRemoveGroup by lazy {
-//        findViewById<Button>(R.id.btnRemoveGroup)
-//    }
-//
-//    private val btnStartReceive by lazy {
-//        findViewById<Button>(R.id.btnStartReceive)
-//    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_file_receiver)
+        initView()
+        initDevice()
+        initEvent()
+    }
+
+
+    private fun initView() {
+        supportActionBar?.title = "文件接收端"
+        btnCreateGroup.setOnClickListener {
+            createGroup()
+        }
+        btnRemoveGroup.setOnClickListener {
+            removeGroup()
+        }
+        btnStartReceive.setOnClickListener {
+            fileReceiverViewModel.startListener()
+        }
+    }
+
+    private fun initDevice() {
+        //当接收到这几个广播时，我们都需要到 WifiP2pManager （对等网络管理器）来进行相应的信息请求，
+        // 此外还需要用到 Channel 对象作为请求参数
+        val mWifiP2pManager = getSystemService(WIFI_P2P_SERVICE) as? WifiP2pManager//类型转换，转换不成功则返回null
+        if (mWifiP2pManager == null) {
+            finish()
+            return
+        }
+        wifiP2pManager = mWifiP2pManager
+        wifiP2pChannel = wifiP2pManager.initialize(this, mainLooper, directActionListener)
+
+        broadcastReceiver = DirectBroadcastReceiver(
+            wifiP2pManager = wifiP2pManager,
+            wifiP2pChannel = wifiP2pChannel,
+            directActionListener = directActionListener
+        )
+
+        registerReceiver(broadcastReceiver, DirectBroadcastReceiver.getIntentFilter())
+    }
+
+    private fun initEvent() {
+        lifecycleScope.launch {
+            fileReceiverViewModel.viewState.collect {
+                when (it) {
+                    ViewState.Idle -> {
+                        clearLog()
+                        dismissLoadingDialog()
+                    }
+
+                    ViewState.Connecting -> {
+                        showLoadingDialog(message = "")
+                    }
+
+                    is ViewState.Receiving -> {
+                        showLoadingDialog(message = "")
+                    }
+
+                    is ViewState.Success -> {
+                        dismissLoadingDialog()
+                        ivImage.load(data = it.file)
+                    }
+
+                    is ViewState.Failed -> {
+                        dismissLoadingDialog()
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            fileReceiverViewModel.log.collect {
+                log(it)
+            }
+        }
+    }
+
 
     private val fileReceiverViewModel by viewModels<FileReceiverViewModel>()
 
@@ -90,77 +148,7 @@ class FileReceiverActivity : BaseActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_file_receiver)
-        initView()
-        initDevice()
-        initEvent()
-    }
 
-    private fun initView() {
-        supportActionBar?.title = "文件接收端"
-        btnCreateGroup.setOnClickListener {
-            createGroup()
-        }
-        btnRemoveGroup.setOnClickListener {
-            removeGroup()
-        }
-        btnStartReceive.setOnClickListener {
-            fileReceiverViewModel.startListener()
-        }
-    }
-
-    private fun initDevice() {
-        val mWifiP2pManager = getSystemService(WIFI_P2P_SERVICE) as? WifiP2pManager
-        if (mWifiP2pManager == null) {
-            finish()
-            return
-        }
-        wifiP2pManager = mWifiP2pManager
-        wifiP2pChannel = wifiP2pManager.initialize(this, mainLooper, directActionListener)
-        broadcastReceiver = DirectBroadcastReceiver(
-            wifiP2pManager = wifiP2pManager,
-            wifiP2pChannel = wifiP2pChannel,
-            directActionListener = directActionListener
-        )
-        registerReceiver(broadcastReceiver, DirectBroadcastReceiver.getIntentFilter())
-    }
-
-    private fun initEvent() {
-        lifecycleScope.launch {
-            fileReceiverViewModel.viewState.collect {
-                when (it) {
-                    ViewState.Idle -> {
-                        clearLog()
-                        dismissLoadingDialog()
-                    }
-
-                    ViewState.Connecting -> {
-                        showLoadingDialog(message = "")
-                    }
-
-                    is ViewState.Receiving -> {
-                        showLoadingDialog(message = "")
-                    }
-
-                    is ViewState.Success -> {
-                        dismissLoadingDialog()
-                        ivImage.load(data = it.file)
-                    }
-
-                    is ViewState.Failed -> {
-                        dismissLoadingDialog()
-                    }
-                }
-            }
-        }
-        lifecycleScope.launch {
-            fileReceiverViewModel.log.collect {
-                log(it)
-            }
-        }
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -174,6 +162,9 @@ class FileReceiverActivity : BaseActivity() {
     private fun createGroup() {
         lifecycleScope.launch {
             removeGroupIfNeed()
+
+            //服务器端要主动创建群组，并等待客户端的连接
+            //直接指定某台设备作为服务器端（群主），即直接指定某台设备用来接收文件
             wifiP2pManager.createGroup(wifiP2pChannel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
                     val log = "createGroup onSuccess"

@@ -37,6 +37,8 @@ class FileReceiverViewModel(context: Application) :
 
     private var job: Job? = null
 
+    //使用 IntentService 在后台监听客户端的 Socket 连接请求，并通过输入输出流来传输文件。
+    //此处的代码比较简单，就只是在指定端口一直堵塞监听客户端的连接请求，获取待传输的文件信息模型 FileTransfer ，之后就进行实际的数据传输
     fun startListener() {
         if (job != null) {
             return
