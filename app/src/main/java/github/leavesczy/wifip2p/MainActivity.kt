@@ -12,9 +12,14 @@ import github.leavesczy.wifip2p.sender.FileSenderActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
- * @Author: CZY
- * @Date: 2022/9/28 14:24
- * @Desc:
+1.在 AndroidManifest 中声明相关权限（网络和文件读写权限）
+
+2.获取 WifiP2pManager ，注册相关广播监听Wifi直连的状态变化
+
+3.指定某一台设备为服务器（用来接收文件），创建群组并作为群主存在，在指定端口监听客户端的连接请求，等待客户端发起连接请求以及文件传输请求
+
+4.客户端（用来发送文件）主动搜索附近的设备，加入到服务器创建的群组，获取服务器的IP地址，向其发起文件传输请求
+
  */
 class MainActivity : BaseActivity() {
 

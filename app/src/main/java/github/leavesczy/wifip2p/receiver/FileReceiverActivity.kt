@@ -43,10 +43,11 @@ class FileReceiverActivity : BaseActivity() {
             removeGroup()
         }
         btnStartReceive.setOnClickListener {
-            fileReceiverViewModel.startListener()
+            fileReceiverViewModel.startListener()   //开启监听
         }
     }
 
+    //创建广播接收器
     private fun initDevice() {
         //当接收到这几个广播时，我们都需要到 WifiP2pManager （对等网络管理器）来进行相应的信息请求，
         // 此外还需要用到 Channel 对象作为请求参数
@@ -57,13 +58,11 @@ class FileReceiverActivity : BaseActivity() {
         }
         wifiP2pManager = mWifiP2pManager
         wifiP2pChannel = wifiP2pManager.initialize(this, mainLooper, directActionListener)
-
         broadcastReceiver = DirectBroadcastReceiver(
             wifiP2pManager = wifiP2pManager,
             wifiP2pChannel = wifiP2pChannel,
             directActionListener = directActionListener
         )
-
         registerReceiver(broadcastReceiver, DirectBroadcastReceiver.getIntentFilter())
     }
 
@@ -122,7 +121,7 @@ class FileReceiverActivity : BaseActivity() {
             log("onConnectionInfoAvailable")
             log("isGroupOwner：" + wifiP2pInfo.isGroupOwner)
             log("groupFormed：" + wifiP2pInfo.groupFormed)
-            if (wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner) {
+            if (wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner) {  //如果有组建立且自己是Go设备
                 connectionInfoAvailable = true
             }
         }
@@ -163,7 +162,7 @@ class FileReceiverActivity : BaseActivity() {
         lifecycleScope.launch {
             removeGroupIfNeed()
 
-            //服务器端要主动创建群组，并等待客户端的连接
+            //3.1 服务器端要主动创建群组，并等待客户端的连接
             //直接指定某台设备作为服务器端（群主），即直接指定某台设备用来接收文件
             wifiP2pManager.createGroup(wifiP2pChannel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
@@ -189,13 +188,12 @@ class FileReceiverActivity : BaseActivity() {
 
     @SuppressLint("MissingPermission")
     private suspend fun removeGroupIfNeed() {
-        return suspendCancellableCoroutine { continuation ->
+        return suspendCancellableCoroutine { continuation ->    //将回调函数转换为协程
             wifiP2pManager.requestGroupInfo(wifiP2pChannel) { group ->
                 if (group == null) {
-                    continuation.resume(value = Unit)
+                    continuation.resume(value = Unit)   //处理回调
                 } else {
-                    wifiP2pManager.removeGroup(wifiP2pChannel,
-                        object : WifiP2pManager.ActionListener {
+                    wifiP2pManager.removeGroup(wifiP2pChannel, object : WifiP2pManager.ActionListener {
                             override fun onSuccess() {
                                 val log = "removeGroup onSuccess"
                                 log(log = log)
