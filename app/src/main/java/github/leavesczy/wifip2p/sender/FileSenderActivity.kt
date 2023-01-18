@@ -38,6 +38,7 @@ class FileSenderActivity : BaseActivity() {
         }
         btnChooseFile.setOnClickListener {
             getContentLaunch.launch("image/*")  //跳转文件选择界，获取相册
+            //"image/*"指定只显示图片
         }
         btnDirectDiscover.setOnClickListener {
             if (!wifiP2pEnabled) {
@@ -95,7 +96,8 @@ class FileSenderActivity : BaseActivity() {
     }
 
     private fun initEvent() {
-        lifecycleScope.launch { //协程就像轻量级的线程。线程由系统调度，协程由开发者控制，且为异步执行。
+        //协程就像轻量级的线程。线程由系统调度，协程由开发者控制，且为异步执行。
+        lifecycleScope.launch { //开启一个协程
             fileSenderViewModel.viewState.collect {
                 when (it) {
                     ViewState.Idle -> {

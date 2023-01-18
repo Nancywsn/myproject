@@ -55,32 +55,33 @@ class FileReceiverViewModel(context: Application) :
                 _viewState.emit(value = ViewState.Connecting)
                 log(log = "开启 Socket")
 
-                serverSocket = ServerSocket()
-                serverSocket.bind(InetSocketAddress(Constants.PORT))
+                serverSocket = ServerSocket()   //创建服务端socket
+                serverSocket.bind(InetSocketAddress(Constants.PORT))    //绑定端口号
                 serverSocket.reuseAddress = true
-                serverSocket.soTimeout = 30000
+                serverSocket.soTimeout = 30000  //超时设为30秒
 
                 log(log = "socket accept，三十秒内如果未成功则断开链接")
 
-                val client = serverSocket.accept()
+                val client = serverSocket.accept()  //监听客户端请求
 
                 _viewState.emit(value = ViewState.Receiving)
 
                 clientInputStream = client.getInputStream()
                 objectInputStream = ObjectInputStream(clientInputStream)
+
                 val fileTransfer = objectInputStream.readObject() as FileTransfer
-                val file = File(getCacheDir(context = getApplication()), fileTransfer.fileName)
+                val file = File(getCacheDir(context = getApplication()), fileTransfer.fileName) //创建缓存中的file对象
 
                 log(log = "连接成功，待接收的文件: $fileTransfer")
                 log(log = "文件将保存到: $file")
                 log(log = "开始传输文件")
 
-                fileOutputStream = FileOutputStream(file)
+                fileOutputStream = FileOutputStream(file)   //FileOutputStream流用来写入数据到File对象表示的文件
                 val buffer = ByteArray(1024 * 100)
                 while (true) {
-                    val length = clientInputStream.read(buffer)
+                    val length = clientInputStream.read(buffer) //socket到缓存
                     if (length > 0) {
-                        fileOutputStream.write(buffer, 0, length)
+                        fileOutputStream.write(buffer, 0, length)   //缓存到内存
                     } else {
                         break
                     }
@@ -104,8 +105,8 @@ class FileReceiverViewModel(context: Application) :
     }
 
     private fun getCacheDir(context: Context): File {
-        val cacheDir = File(context.cacheDir, "FileTransfer")
-        cacheDir.mkdirs()
+        val cacheDir = File(context.cacheDir, "FileTransfer")   //创建面向缓存的file对象
+        cacheDir.mkdirs()   //创建文件
         return cacheDir
     }
 

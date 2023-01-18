@@ -7,11 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import github.leavesczy.wifip2p.utils.WifiP2pUtils
+import kotlinx.android.synthetic.main.item_device.view.*
 
-/**
- * @Author: leavesCZY
- * @Desc:
- */
+//自定义控件的适配器
 
 interface OnItemClickListener {
 
@@ -47,11 +45,10 @@ class DeviceAdapter(private val wifiP2pDeviceList: List<WifiP2pDevice>) :
         val tvDeviceName: TextView
         val tvDeviceAddress: TextView
         val tvDeviceDetails: TextView
-
         init {
-            tvDeviceName = itemView.findViewById(R.id.tvDeviceName)
-            tvDeviceAddress = itemView.findViewById(R.id.tvDeviceAddress)
-            tvDeviceDetails = itemView.findViewById(R.id.tvDeviceDetails)
+            tvDeviceName = itemView.tvDeviceName
+            tvDeviceAddress = itemView.tvDeviceAddress
+            tvDeviceDetails = itemView.tvDeviceDetails
         }
     }
 }
