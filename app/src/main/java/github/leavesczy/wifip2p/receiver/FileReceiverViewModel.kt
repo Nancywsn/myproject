@@ -19,11 +19,6 @@ import java.io.ObjectInputStream
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 
-/**
- * @Author: CZY
- * @Date: 2022/9/26 14:18
- * @Desc:
- */
 class FileReceiverViewModel(context: Application) :
     AndroidViewModel(context) {
 

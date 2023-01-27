@@ -68,7 +68,7 @@ class FileReceiverActivity : BaseActivity() {
 
     private fun initEvent() {
         lifecycleScope.launch {
-            fileReceiverViewModel.viewState.collect {
+            fileReceiverViewModel.viewState.collect {   //收到消息
                 when (it) {
                     ViewState.Idle -> {
                         clearLog()
